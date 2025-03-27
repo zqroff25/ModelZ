@@ -1,0 +1,26 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 50px;
+    background-color: #2c2c2c; /* koyu gri */
+    color: #f1f1f1; /* açık yazı rengi */
+}
+
+h1, h3 {
+    color: #ffcc00;
+}
+
+button, a {
+    color: white;
+    background-color: #cc0000;
+    padding: 10px 20px;
+    text-decoration: none;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+button:hover, a:hover {
+    background-color: #990000;
+}

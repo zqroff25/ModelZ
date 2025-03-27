@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ModelZ - Yangın Tespiti</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>🔥 Yangın Tespit Modeli</h1>
+    <form action="{{ url_for('run_model') }}" method="post" enctype="multipart/form-data">
+        <input type="file" name="image" required>
+        <button type="submit">Modeli Çalıştır</button>
+    </form>
+</body>
+</html>

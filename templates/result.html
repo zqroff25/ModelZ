@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sonuç</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Sonuç</h1>
+    <p><strong>Yangın Algılandı mı?</strong> {{ 'Evet 🔥' if detected else 'Hayır ✅' }}</p>
+    
+    <h3>Yüklenen Görsel:</h3>
+    <img src="{{ url_for('static', filename=input_image) }}" width="300">
+    
+    <h3>Model Çıktısı:</h3>
+    <img src="{{ url_for('static', filename=output_image) }}" width="300">
+    
+    <br><br>
+    <a href="{{ url_for('index') }}">Yeni Görsel Dene</a>
+    
+</body>
+</html>
