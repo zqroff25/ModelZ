@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, render_template, request, redirect, url_for
 from FireRecognizer import detect_fire_from_image
+from SkinCancerRecognizer import detect_skin_cancer
 import os
 
 app = Flask(__name__)
@@ -29,6 +30,20 @@ def run_model():
         "input": "uploads/input.jpg",
         "output": "outputs/output.jpg",
         "detected": detected
+    })
+@app.route('/run_skin_model', methods=['POST'])
+def run_skin_model():
+    file = request.files['image']
+    filename = 'input.jpg'
+    input_path = os.path.join('static/uploads', filename)
+    file.save(input_path)
+
+    output_path, label = detect_skin_cancer(input_path)
+
+    return jsonify({
+        "input": "uploads/input.jpg",
+        "output": "outputs/output.jpg",
+        "label": label
     })
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 10000))

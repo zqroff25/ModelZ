@@ -270,7 +270,7 @@
               </div>
               <span class="text-xs text-primary">97.5%</span>
             </div>
-            <button
+            <button onclick="openSkinModal()"
               class="bg-primary text-white w-full py-3 !rounded-button hover:bg-primary/90 transition-colors whitespace-nowrap"
             >
               Şimdi Dene
@@ -483,7 +483,7 @@
           document.querySelector(this.getAttribute("href")).scrollIntoView({
             behavior: "smooth",
           });
-          // 如果移动菜单是打开的，点击链接后关闭它
+          
           const mobileMenu = document.getElementById("mobileMenu");
           if (mobileMenu.classList.contains("block")) {
             mobileMenu.classList.remove("block");
@@ -491,7 +491,7 @@
           }
         });
       });
-      // 移动菜单切换
+     
       const mobileMenuButton = document.getElementById("mobileMenuButton");
       const mobileMenu = document.getElementById("mobileMenu");
       mobileMenuButton.addEventListener("click", function () {
@@ -505,10 +505,10 @@
           mobileMenuButton.innerHTML = '<i class="ri-menu-line text-2xl"></i>';
         }
       });
-      // 响应窗口大小变化
+     
       window.addEventListener("resize", function () {
         if (window.innerWidth >= 768) {
-          // md 断点
+          
           mobileMenu.classList.add("hidden");
           mobileMenuButton.innerHTML = '<i class="ri-menu-line text-2xl"></i>';
         }
@@ -542,6 +542,63 @@
       </div>
     </div>
   </div>
+  <!-- Cilt Kanseri Modal -->
+<div id="skinModal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+  <div class="bg-white rounded-xl shadow-lg w-[90%] max-w-3xl p-6 text-black relative">
+    <button onclick="closeSkinModal()" class="absolute top-2 right-4 text-gray-600 text-xl font-bold">×</button>
+
+    <h2 class="text-2xl font-bold mb-4 text-center">Cilt Kanseri Tespiti</h2>
+
+    <!-- Form -->
+    <form id="skinForm" method="POST" enctype="multipart/form-data">
+      <input type="file" name="image" required class="mb-4">
+      <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Görseli Gönder</button>
+    </form>
+
+    <div id="skinResultArea" class="mt-6 hidden">
+      <h3 class="font-semibold text-lg mb-2">Sonuç:</h3>
+      <p class="text-center text-lg font-bold mb-2" id="skinLabel"></p>
+      <div class="flex justify-around items-center gap-4 flex-wrap">
+        <div>
+          <p class="font-medium text-center mb-1">Yüklenen Görsel</p>
+          <img id="skinInputPreview" src="" width="250">
+        </div>
+        <div>
+          <p class="font-medium text-center mb-1">Model Çıktısı</p>
+          <img id="skinOutputPreview" src="" width="250">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  function openSkinModal() {
+    document.getElementById('skinModal').classList.remove('hidden');
+    document.getElementById('skinResultArea').classList.add('hidden');
+  }
+
+  function closeSkinModal() {
+    document.getElementById('skinModal').classList.add('hidden');
+  }
+
+  document.getElementById('skinForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+    const response = await fetch('/run_skin_model', {
+      method: 'POST',
+      body: formData
+    });
+
+    const data = await response.json();
+    const now = new Date().getTime();
+
+    document.getElementById('skinLabel').innerText = data.label;
+    document.getElementById('skinInputPreview').src = `/static/${data.input}?t=${now}`;
+    document.getElementById('skinOutputPreview').src = `/static/${data.output}?t=${now}`;
+    document.getElementById('skinResultArea').classList.remove('hidden');
+  });
+</script>
     <script>
         function openModal() {
         document.getElementById('modelModal').classList.remove('hidden');
