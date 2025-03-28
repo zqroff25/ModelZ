@@ -45,8 +45,8 @@ def run_skin_model():
         "output": "outputs/output.jpg",
         "label": label
     })
-if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 10000))
-    app.run(debug=False, host='0.0.0.0', port=port)
 '''if __name__ == '__main__':
-    app.run(debug=True, port=8501)'''
+    port = int(os.environ.get("PORT", 10000))
+    app.run(debug=False, host='0.0.0.0', port=port)'''
+if __name__ == '__main__':
+    app.run(debug=True, port=8501)
