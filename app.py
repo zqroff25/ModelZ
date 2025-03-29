@@ -45,6 +45,23 @@ def run_skin_model():
         "output": "outputs/output.jpg",
         "label": label
     })
+from PlateRecognizer import detect_plate_from_image
+
+@app.route('/run_plate_model', methods=['POST'])
+def run_plate_model():
+    file = request.files['image']
+    filename = 'input.jpg'
+    input_path = os.path.join('static/uploads', filename)
+    file.save(input_path)
+
+    output_path, result_text = detect_plate_from_image(input_path)
+
+    return jsonify({
+        "input": "uploads/input.jpg",
+        "output": "outputs/output_input.jpg",
+        "text": result_text
+    })
+
 '''if __name__ == '__main__':
     port = int(os.environ.get("PORT", 10000))
     app.run(debug=False, host='0.0.0.0', port=port)'''

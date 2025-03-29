@@ -236,7 +236,7 @@
             >
               <div>
                 <h3 class="text-xl md:text-2xl font-bold mb-2">
-                  Cilt Kanseri Tespit
+                  Cilt Kanseri Tanıma
                 </h3>
                 <p class="text-gray-400">%97.5 doğruluk oranı</p>
               </div>
@@ -332,7 +332,7 @@
             >
               <div>
                 <h3 class="text-xl md:text-2xl font-bold mb-2">
-                  Duygu Analizi
+                  Plaka Tanıma
                 </h3>
                 <p class="text-gray-400">%95.8 doğruluk oranı</p>
               </div>
@@ -366,7 +366,7 @@
               </div>
               <span class="text-xs text-primary">95.8%</span>
             </div>
-            <button
+            <button onclick="openPlateModal()"
               class="bg-primary text-white w-full py-3 !rounded-button hover:bg-primary/90 transition-colors whitespace-nowrap"
             >
               Şimdi Dene
@@ -571,6 +571,64 @@
     </div>
   </div>
 </div>
+<!-- Plaka Tanıma Modal -->
+<div id="plateModal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+  <div class="bg-white rounded-xl shadow-lg w-[90%] max-w-3xl p-6 text-black relative">
+    <button onclick="closePlateModal()" class="absolute top-2 right-4 text-gray-600 text-xl font-bold">×</button>
+
+    <h2 class="text-2xl font-bold mb-4 text-center">Plaka Tanıma</h2>
+
+    <!-- Form -->
+    <form id="plateForm" method="POST" enctype="multipart/form-data">
+      <input type="file" name="image" required class="mb-4">
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Görseli Gönder</button>
+    </form>
+
+    <div id="plateResultArea" class="mt-6 hidden">
+      <h3 class="font-semibold text-lg mb-2 text-center">Tespit Edilen Plaka:</h3>
+      <p id="plateText" class="text-center text-xl font-bold mb-4 text-red-600"></p>
+      <div class="flex justify-around items-center gap-4 flex-wrap">
+        <div>
+          <p class="font-medium text-center mb-1">Yüklenen Görsel</p>
+          <img id="plateInputPreview" src="" width="250">
+        </div>
+        <div>
+          <p class="font-medium text-center mb-1">Model Çıktısı</p>
+          <img id="plateOutputPreview" src="" width="250">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  function openPlateModal() {
+    document.getElementById('plateModal').classList.remove('hidden');
+    document.getElementById('plateResultArea').classList.add('hidden');
+  }
+
+  function closePlateModal() {
+    document.getElementById('plateModal').classList.add('hidden');
+  }
+
+  document.getElementById('plateForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(this);
+    const response = await fetch('/run_plate_model', {
+      method: 'POST',
+      body: formData
+    });
+
+    const data = await response.json();
+    const now = new Date().getTime();
+
+    document.getElementById('plateText').innerText = data.text;
+    document.getElementById('plateInputPreview').src = `/static/${data.input}?t=${now}`;
+    document.getElementById('plateOutputPreview').src = `/static/${data.output}?t=${now}`;
+    document.getElementById('plateResultArea').classList.remove('hidden');
+  });
+</script>
+
 <script>
   function openSkinModal() {
     document.getElementById('skinModal').classList.remove('hidden');

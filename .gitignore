@@ -2,3 +2,8 @@ skin_cancer_detection_model.h5
 ngrok.exe
 output.jpg
 input.jpg
+ngrok.exe.old
+output_input.jpg
+FireRecognizer.cpython-312.pyc
+PlateRecognizer.cpython-312.pyc
+SkinCancerRecognizer.cpython-312.pyc
