@@ -575,5 +575,93 @@
         document.getElementById('resultArea').classList.remove('hidden');
         });
     </script>  
+    <!-- AI Assistant Chat Button -->
+<button onclick="toggleBotModal()" class="fixed bottom-6 right-6 bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg z-50">
+  🤖 AI Asistan
+</button>
+
+<!-- AI Chat Modal -->
+<!-- AI Chat Modal -->
+<div id="botModal" class="hidden fixed bottom-20 right-6 bg-white text-black w-80 max-h-[600px] h-[500px] shadow-xl rounded-lg z-50 flex flex-col overflow-hidden border">
+  <div class="bg-blue-600 text-white px-4 py-2 flex items-center justify-between font-bold">
+    <span>ModelZ AI Asistan 🤖</span>
+    <button onclick="minimizeBot()" id="minimizeBtn" class="text-white text-lg leading-none">–</button>
+  </div>
+
+  <div id="chatWindow" class="flex-1 overflow-y-auto p-3 text-sm space-y-2 bg-gray-100">
+    <!-- Chat içerikleri -->
+  </div>
+
+  <form id="botForm" class="flex border-t">
+    <input type="text" id="userMessage" placeholder="Bir şey sor..." class="flex-1 px-3 py-2 text-sm focus:outline-none">
+    <button type="submit" class="bg-blue-600 text-white px-3">Gönder</button>
+  </form>
+</div>
+<script>
+  function toggleBotModal() {
+    const modal = document.getElementById('botModal');
+    modal.classList.toggle('hidden');
+  }
+
+  function minimizeBot() {
+    const modal = document.getElementById('botModal');
+    const chatWindow = document.getElementById('chatWindow');
+    const form = document.getElementById('botForm');
+    const btn = document.getElementById('minimizeBtn');
+
+    if (chatWindow.style.display !== 'none') {
+      chatWindow.style.display = 'none';
+      form.style.display = 'none';
+      btn.innerText = '+';
+    } else {
+      chatWindow.style.display = 'block';
+      form.style.display = 'flex';
+      btn.innerText = '–';
+    }
+  }
+
+  document.getElementById('botForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const input = document.getElementById('userMessage');
+    const message = input.value.trim();
+    if (!message) return;
+
+    const chatWindow = document.getElementById('chatWindow');
+
+    // Kullanıcı mesajı ekle
+    chatWindow.innerHTML += `
+  <div class="text-right w-full">
+    <div class="bg-blue-600 text-white inline-block px-3 py-2 rounded-lg text-sm max-w-[85%]">
+      ${message}
+    </div>
+  </div>
+`;
+    input.value = '';
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+
+    // Flask'a gönder
+    const res = await fetch('/ask_bot', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message })
+    });
+
+    const data = await res.json();
+    const reply = data.response;
+
+    // Bot cevabı
+    chatWindow.innerHTML += `
+  <div class="text-left w-full">
+    <div class="bg-gray-300 inline-block px-3 py-2 rounded-lg text-sm max-w-[85%]">
+      ${reply}
+    </div>
+  </div>
+`;
+
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+  });
+</script>
+
+
   </body>
 </html>
